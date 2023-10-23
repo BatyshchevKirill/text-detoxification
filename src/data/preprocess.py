@@ -38,6 +38,7 @@ def read(content_path: str):
         axis=1,
     )
     df.drop(["reference", "translation", "ref_tox", "trn_tox"], inplace=True, axis=1)
+    df = df.rename(columns={'lenght_diff': 'length_diff'})
     return df
 
 
