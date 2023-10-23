@@ -1,1 +1,2 @@
-
+pandas~=2.1.1
+contractions~=0.1.73
