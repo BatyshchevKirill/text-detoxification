@@ -4,8 +4,8 @@ import torch.nn as nn
 class Transformer(nn.Module):
     def __init__(self, input_vocab, output_vocab, model_dim, heads, num_encoder_layers, num_decoder_layers, random_state=None):
         super(Transformer, self).__init__()
-        if seed is not None:
-            torch.manual_seed(seed)
+        if random_state is not None:
+            torch.manual_seed(random_state)
         self.embedding_src = nn.Embedding(input_vocab, model_dim)
         self.embedding_tgt = nn.Embedding(output_vocab, model_dim)
 
