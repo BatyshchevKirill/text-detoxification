@@ -25,6 +25,10 @@ class ToxicDataset(Dataset):
         self.toxic = df['toxic'].values.tolist()
         self.detoxed = df['detoxed'].values.tolist()
 
+        for i in tqdm(range(len(df))):
+            self.toxic[i] = word_tokenize(self.toxic[i])
+            self.detoxed[i] = word_tokenize(self.detoxed[i])
+
         if load_pretrained:
             self.vocab = torch.load(vocab_path)
         else:
