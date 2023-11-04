@@ -15,6 +15,9 @@ class ToxicDataset(Dataset):
         df = pd.read_csv(filepath)
         self.toxic = df['toxic']
         self.detoxed = df['detoxed']
+        for i in range(len(df)):
+            self.toxic.iloc[i] = word_tokenize(self.toxic.iloc[i])
+            self.detoxed.iloc[i] = word_tokenize(self.detoxed.iloc[i])
 
     def __getitem__(self, i: int):
         return self.toxic[i], self.detoxed[i]
@@ -57,11 +60,11 @@ class TransformerLoaderCreator:
         src_texts = list(src_texts)
         tgt_texts = list(tgt_texts)
 
-        src_tokens = [word_tokenize(text)[:self.max_len] for text in src_texts]
+        src_tokens = [text[:self.max_len] for text in src_texts]
         src_padded = [tokens + ["<PAD>"] * (self.max_len - len(tokens)) for tokens in src_tokens]
         src_tensors = torch.LongTensor(src_padded)
 
-        tgt_tokens = [word_tokenize(text)[:self.max_len] for text in tgt_texts]
+        tgt_tokens = [text[:self.max_len] for text in tgt_texts]
         tgt_padded = [tokens + ["<PAD>"] * (self.max_len - len(tokens)) for tokens in tgt_tokens]
         tgt_tensors = torch.LongTensor(tgt_padded)
 
