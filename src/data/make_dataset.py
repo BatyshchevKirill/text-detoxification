@@ -1,9 +1,9 @@
 import argparse
 import pandas as pd
 import torch
-from torch.utils.data import random_split, Dataset, DataLoader
+from torch.utils.data import Dataset
 import torch
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, random_split, RandomSampler
 import nltk
 from nltk.tokenize import word_tokenize
 
@@ -37,10 +37,11 @@ class TransformerLoaderCreator:
         train_dataset, test_dataset = random_split(dataset, [num_train_samples, num_test_samples],
                                                    generator=torch.Generator().manual_seed(self.random_state))
 
+        sampler = RandomSampler(train_dataset, generator=torch.Generator().manual_seed(random_state))
         self.train_loader = DataLoader(
             train_dataset,
             batch_size=self.batch_size,
-            shuffle=True,
+            sampler=sampler,
             collate_fn=self.collate_fn,
         )
 
