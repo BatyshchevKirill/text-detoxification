@@ -13,8 +13,8 @@ nltk.download('punkt')
 class ToxicDataset(Dataset):
     def __init__(self, filepath="../../data/interim/preprocessed_data.csv"):
         df = pd.read_csv(filepath)
-        self.toxic = df['toxic']
-        self.detoxed = df['detoxed']
+        self.toxic = df['toxic'].values.tolist()
+        self.detoxed = df['detoxed'].values.tolist()
         for i in range(len(df)):
             self.toxic[i] = word_tokenize(self.toxic[i])
             self.detoxed[i] = word_tokenize(self.detoxed[i])
