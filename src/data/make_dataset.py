@@ -86,7 +86,8 @@ class TransformerLoaderCreator:
         tgt_padded = [tokens + [PAD_IDX] * (self.max_len - len(tokens)) for tokens in tgt_tokens]
         tgt_tensors = torch.LongTensor(tgt_padded)
 
-        return src_tensors.transpose(1, 0), tgt_tensors.transpose(1, 0)
+        return src_tensors, tgt_tensors
+
 
     def __call__(self):
         return self.train_loader, self.val_loader
