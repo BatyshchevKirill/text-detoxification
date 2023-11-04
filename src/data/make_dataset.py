@@ -16,8 +16,8 @@ class ToxicDataset(Dataset):
         self.toxic = df['toxic']
         self.detoxed = df['detoxed']
         for i in range(len(df)):
-            self.toxic.iloc[i] = word_tokenize(self.toxic.iloc[i])
-            self.detoxed.iloc[i] = word_tokenize(self.detoxed.iloc[i])
+            self.toxic[i] = word_tokenize(self.toxic[i])
+            self.detoxed[i] = word_tokenize(self.detoxed[i])
 
     def __getitem__(self, i: int):
         return self.toxic[i], self.detoxed[i]
