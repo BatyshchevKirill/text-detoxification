@@ -1,23 +1,9 @@
+from torch import Tensor
 import torch
 import torch.nn as nn
+from torch.nn import Transformer
+import math
 
-class Transformer(nn.Module):
-    def __init__(self, input_vocab, output_vocab, model_dim, heads, num_encoder_layers, num_decoder_layers, random_state=None):
-        super(Transformer, self).__init__()
-        if random_state is not None:
-            torch.manual_seed(random_state)
-        self.embedding_src = nn.Embedding(input_vocab, model_dim)
-        self.embedding_tgt = nn.Embedding(output_vocab, model_dim)
+UNK_IDX, PAD_IDX, BOS_IDX, EOS_IDX = 0, 1, 2, 3
 
-        self.encoder = nn.TransformerEncoder(nn.TransformerEncoderLayer(model_dim, heads), num_encoder_layers)
-        self.decoder = nn.TransformerDecoder(nn.TransformerDecoderLayer(model_dim, heads), num_decoder_layers)
-        self.output_layer = nn.Linear(model_dim, output_vocab)
-
-    def forward(self, src, tgt):
-        src_embed = self.embedding_src(src)
-        tgt_embed = self.embedding_tgt(tgt)
-        memory = self.encoder(src_embed)
-        output = self.decoder(tgt_embed, memory)
-        output_logits = self.output_layer(output)
-        return output_logits
 
