@@ -1,2 +1,4 @@
 https://arxiv.org/abs/2109.08914
   Base reference
+https://arxiv.org/pdf/1706.03762.pdf
+  Attention is all you need
