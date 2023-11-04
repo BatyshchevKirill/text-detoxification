@@ -2,3 +2,5 @@ pandas~=2.1.1
 contractions~=0.1.73
 torch~=2.1.0
 nltk~=3.8.1
+tqdm~=4.66.1
+torchtext~=0.16.0
