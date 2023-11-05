@@ -3,7 +3,7 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 class PretrainedT5:
     def __init__(self):
-        self.model = AutoModelForSeq2SeqLM.from_pretrained("s-nlp/t5-paranmt-detox")
+        self.model = AutoModelForSeq2SeqLM.from_pretrained("s-nlp/t5-paranmt-detox",  max_new_tokens=100)
         self.tokenizer = AutoTokenizer.from_pretrained("s-nlp/t5-paranmt-detox")
 
     def __call__(self, text):
