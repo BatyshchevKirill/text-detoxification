@@ -1,11 +1,13 @@
-from torchtext.data.metrics import bleu_score
+from torchmetrics.text import BLEUScore
 from torchmetrics.text.rouge import ROUGEScore
 from transformers import RobertaTokenizer, RobertaForSequenceClassification
 from torch.nn import Softmax
 
 
 def bleu(ref, trans):
-    return bleu_score([trans], [[ref]], max_n=3, weights=[1/3, 1/3, 1/3])
+    score = BLEUScore(smooth=True)
+    score = score([trans], [[ref]]).item()
+    return score
 
 
 def rouge(ref, trans):
