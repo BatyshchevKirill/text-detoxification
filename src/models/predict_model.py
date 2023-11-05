@@ -9,6 +9,7 @@ if __name__ == '__main__':
     parser.add_argument("data_path", type=file_path)
     parser.add_argument("save_path", type=file_path)
     parser.add_argument("--vocab-path", default=None, type=file_path)
+    parser.add_argument("--toxic_words_path", default=None, type=file_path)
     parser.add_argument("--checkpoint", type=file_path, default=None)
     args = parser.parse_args()
 
@@ -23,7 +24,7 @@ if __name__ == '__main__':
         if args.model_name == 't5':
             model = t5.PretrainedT5()
         else:
-            model = b.BaselineModel()
+            model = b.BaselineModel(args.toxic_words_path)
         for text in tqdm(data.values):
             res.append(model(text))
 
