@@ -1,7 +1,7 @@
 import argparse
 from tqdm import tqdm
-from src.data.preprocess import file_path, read, lower, expand_contractions
-from src.models import baseline as b, pretrained_t5 as t5, transformer as tr
+from src.models.preprocess import file_path, read, lower, expand_contractions
+from src.models import baseline as b, pretrained_t5 as t5
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Predict model parser")

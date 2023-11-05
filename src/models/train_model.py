@@ -7,7 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 from src.data.make_dataset import TransformerLoaderCreator, ToxicDataset
-from src.data.preprocess import file_path
+from src.models.preprocess import file_path
 from src.models.transformer import PAD_IDX
 from src.models.transformer import Transformer
 
