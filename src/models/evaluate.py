@@ -5,7 +5,7 @@ from torch.nn import Softmax
 
 
 def bleu(ref, trans):
-    return bleu_score([trans], [[ref]], max_n=3)
+    return bleu_score([trans], [[ref]], max_n=3, weights=[1/3, 1/3, 1/3])
 
 
 def rouge(ref, trans):
