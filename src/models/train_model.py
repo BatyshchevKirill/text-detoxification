@@ -1,11 +1,13 @@
 import argparse
 import os
+import sys
 
 import torch
 import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
+sys.path.append(os.getcwd())
 from src.data.make_dataset import TransformerLoaderCreator, ToxicDataset
 from src.models.preprocess import file_path
 from src.models.transformer import PAD_IDX
