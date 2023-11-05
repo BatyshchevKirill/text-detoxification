@@ -1,11 +1,15 @@
-from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm
+import argparse
 import os
+
 import torch
 import torch.nn as nn
-from transformer import UNK_IDX, PAD_IDX, BOS_IDX, EOS_IDX
+from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
+
+from src.data.make_dataset import TransformerLoaderCreator, ToxicDataset
+from src.data.preprocess import file_path
+from transformer import PAD_IDX
 from transformer import Transformer
-from ..data.make_dataset import TransformerLoaderCreator, ToxicDataset
 
 
 def train_transformer(model, save_path, lr, epochs, train_loader, val_loader):
@@ -60,14 +64,18 @@ def train_transformer(model, save_path, lr, epochs, train_loader, val_loader):
 
 
 if __name__ == '__main__':
-    # TOD: Read from console
-    model_name = None # FROM SET, now only transformer is avalable
-    save_path = None # from console, string
-    dataset_path = None # from console, string
-    vocab_path = None # optional, string, if not present: None
-    batch_size = 32 # optional from console, int
-    random_state = None # optional, from console
-    epochs = 20  # optional, from console
+    parser = argparse.ArgumentParser(description="Train model parser")
+    parser.add_argument("model_name", choices=["transformer"])
+    parser.add_argument("save_path", type=file_path)
+    parser.add_argument("dataset_path", type=file_path)
+    parser.add_argument("--vocab-path", default=None, type=file_path)
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--random-state", type=float, default=42)
+    parser.add_argument("--epochs", type=int, default=20)
+    args = parser.parse_args()
+    model_name, save_path, dataset_path, vocab_path, batch_size, random_state, epochs \
+        = args.model_name, args.save_path, args.dataset_path, args.vocab_path, args.batch_size, args.random_state, \
+        args.epochs
 
     if model_name == 'transformer':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -77,7 +85,7 @@ if __name__ == '__main__':
             vocab_path=vocab_path,
             load_pretrained=(vocab_path is not None)
         )
-        train_loader, val_loader = TransformerLoaderCreator(dataset, batch_size, max_len=128, random_state=random_state)()
+        train_loader, val_loader = TransformerLoaderCreator(dataset, batch_size, max_len=128,
+                                                            random_state=random_state)()
         model = Transformer(512, len(dataset.vocab), 8, 3, 3, 4, 0.1, 128, device).to(device)
         train_transformer(model, save_path, 4e-3, epochs, train_loader, val_loader)
-
