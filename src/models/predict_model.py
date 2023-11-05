@@ -4,14 +4,14 @@ import sys
 sys.path.append(os.getcwd())
 
 from tqdm import tqdm
-from src.models.preprocess import file_path, read, lower, expand_contractions
+from src.models.preprocess import file_path, read, lower, expand_contractions, file_creatable_path
 from src.models import baseline as b, pretrained_t5 as t5
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Predict model parser")
     parser.add_argument("model_name", choices=["transformer", "t5", "baseline"])
     parser.add_argument("data_path", type=file_path)
-    parser.add_argument("save_path", type=file_path)
+    parser.add_argument("save_path", type=file_creatable_path)
     parser.add_argument("--vocab-path", default=None, type=file_path)
     parser.add_argument("--toxic_words_path", default=None, type=file_path)
     parser.add_argument("--checkpoint", type=file_path, default=None)
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         else:
             model = b.BaselineModel(args.toxic_words_path)
         for text in tqdm(data.values):
-            res.append(model(text))
+            res.append(model(text[0]))
 
     res = '\n'.join(res)
     with open(args.save_path, 'w') as f:

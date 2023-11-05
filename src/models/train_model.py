@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 from src.data.make_dataset import TransformerLoaderCreator, ToxicDataset
-from src.models.preprocess import file_path
+from src.models.preprocess import file_path, file_creatable_path
 from src.models.transformer import PAD_IDX
 from src.models.transformer import Transformer
 
@@ -68,7 +68,7 @@ def train_transformer(model, save_path, lr, epochs, train_loader, val_loader):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Train model parser")
     parser.add_argument("model_name", choices=["transformer"])
-    parser.add_argument("save_path", type=file_path)
+    parser.add_argument("save_path", type=file_creatable_path)
     parser.add_argument("dataset_path", type=file_path)
     parser.add_argument("--vocab-path", default=None, type=file_path)
     parser.add_argument("--batch-size", type=int, default=32)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     model_name, save_path, dataset_path, vocab_path, batch_size, random_state, epochs \
         = args.model_name, args.save_path, args.dataset_path, args.vocab_path, args.batch_size, args.random_state, \
-        args.epochs
+          args.epochs
 
     if model_name == 'transformer':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

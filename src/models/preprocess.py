@@ -113,16 +113,24 @@ def file_path(path):
         raise argparse.ArgumentTypeError(f"{path} is not a valid path")
 
 
+def file_creatable_path(path):
+    dirname = os.path.dirname(path) or os.getcwd()
+    if os.access(dirname, os.W_OK):
+        return path
+    else:
+        raise argparse.ArgumentTypeError(f"{path} is not a valid path for saving")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Preprocess parser")
     parser.add_argument('original_path', type=file_path, help="Required argument for path to original content")
-    parser.add_argument('result_path', type=file_path, help="Required argument for path to preprocessed result")
+    parser.add_argument('result_path', type=file_creatable_path, help="Required argument for path to preprocessed result")
     parser.add_argument('-t', '--train', action='store_true', help='Optional flag for training. Defaults to false')
-    parser.add_argument('-u', '--unzip', type=file_path, default=None, help='Paste path to unzip result')
+    parser.add_argument('-u', '--unzip', type=file_creatable_path, default=None, help='Paste path to unzip result')
     args = parser.parse_args()
     content_path, result_path, train, unzip = args.original_path, args.result_path, args.train, args.unzip
     if unzip:
         unpack(content_path, unzip)
-        content_path = unzip
+        content_path = os.path.join(os.path.abspath(unzip), "filtered.tsv")
     df = read(content_path, True) if train else read(content_path)
     run_pipeline(df, result_path, train)
