@@ -8,8 +8,8 @@ from tqdm import tqdm
 
 from src.data.make_dataset import TransformerLoaderCreator, ToxicDataset
 from src.data.preprocess import file_path
-from transformer import PAD_IDX
-from transformer import Transformer
+from src.models.transformer import PAD_IDX
+from src.models.transformer import Transformer
 
 
 def train_transformer(model, save_path, lr, epochs, train_loader, val_loader):
