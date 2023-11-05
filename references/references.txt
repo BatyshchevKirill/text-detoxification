@@ -1,6 +1,7 @@
-https://arxiv.org/abs/2109.08914
-  Base reference
-https://arxiv.org/pdf/1706.03762.pdf
-  Attention is all you need
-https://www.youtube.com/watch?v=M6adRGJe5cQ&t=612s
-  Tutorial transformers
+https://arxiv.org/abs/2109.08914 - Base reference
+https://arxiv.org/pdf/1706.03762.pdf - Attention is all you need
+https://www.youtube.com/watch?v=M6adRGJe5cQ&t=612s - Tutorial transformers, the transformer model was fully copied from it
+https://huggingface.co/s-nlp/roberta_toxicity_classifier?text=You+are+annoying - The toxicity classifier that I used
+https://huggingface.co/s-nlp/t5-paranmt-detox - the pretrained T5 model that I used
+https://huggingface.co/bert-base-uncased - the pretrained bert model that I used
+
