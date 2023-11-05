@@ -3,11 +3,11 @@ from transformers import BertForMaskedLM, BertTokenizer
 
 
 class BaselineModel:
-    def __init__(self):
+    def __init__(self, toxic_words_path = '../data/interim/toxic_words.txt'):
         self.model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking")
         self.tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking")
         self.toxic_words = set()
-        with open('../data/interim/toxic_words.txt', 'r') as f:
+        with open(toxic_words_path, 'r') as f:
             for line in f:
                 self.toxic_words.add(line.strip())
         self.bad_tokens = self.tokenizer.convert_tokens_to_ids(set(self.tokenizer.tokenize(" ".join(self.toxic_words))))
