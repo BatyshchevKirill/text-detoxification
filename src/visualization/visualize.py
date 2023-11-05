@@ -70,5 +70,5 @@ def plot_loss(path, step):
     axs[1].legend()
     axs[1].set_title('Training and Validation Loss')
     axs[1].grid(True)
-    axs[1].show()
+    plt.show()
 
