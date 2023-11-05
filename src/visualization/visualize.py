@@ -64,7 +64,6 @@ def plot_loss(path, step):
     axs[0].set_title('Training and Validation Loss')
     axs[0].grid(True)
 
-    axs[1].figure(figsize=(10, 6))
     axs[1].plot(val_steps, val_values, label='Validation Loss', color='red')
     axs[1].set_xlabel('Steps')
     axs[1].set_ylabel('Summed Loss')
