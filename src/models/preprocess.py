@@ -84,7 +84,7 @@ def filter_english(df: pd.DataFrame, train=False) -> pd.DataFrame:
 
 
 def expand_contractions(df: pd.DataFrame, train=True) -> pd.DataFrame:
-    if not train:
+    if train:
         df["detoxed"] = df["detoxed"].apply(contractions.fix)
         df["detoxed"] = df["detoxed"].str.replace("in'", "ing")
     df["toxic"] = df["toxic"].apply(contractions.fix)

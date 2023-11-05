@@ -1,4 +1,8 @@
 import argparse
+import os
+import sys
+sys.path.append(os.getcwd())
+
 from tqdm import tqdm
 from src.models.preprocess import file_path, read, lower, expand_contractions
 from src.models import baseline as b, pretrained_t5 as t5
@@ -14,8 +18,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     data = read(args.data_path, train=False)
-    data = lower(data)
-    data = expand_contractions(data)
+    data = lower(data, train=False)
+    data = expand_contractions(data, train=False)
 
     res = []
     if args.model_name == 'transformer':
