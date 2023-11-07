@@ -82,7 +82,7 @@ class TransformerLoaderCreator:
             tgt_texts = list(tgt_texts)
             tgt_tokens = [text[:self.max_len - 2] for text in tgt_texts]
             tgt_padded = [
-                [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens))
+                [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens) - 2)
                 for tokens in tgt_tokens
             ]
             tgt_tensors = torch.LongTensor(tgt_padded).transpose(1, 0)
@@ -91,7 +91,7 @@ class TransformerLoaderCreator:
         src_texts = list(src_texts)
         src_tokens = [text[:self.max_len - 2] for text in src_texts]
         src_padded = [
-            [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens))
+            [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens) - 2)
             for tokens in src_tokens
         ]
         src_tensors = torch.LongTensor(src_padded).transpose(1, 0)
