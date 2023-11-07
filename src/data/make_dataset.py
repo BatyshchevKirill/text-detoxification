@@ -80,14 +80,20 @@ class TransformerLoaderCreator:
         if self.test_size != 1:
             src_texts, tgt_texts = zip(*batch)
             tgt_texts = list(tgt_texts)
-            tgt_tokens = [text[:self.max_len] for text in tgt_texts]
-            tgt_padded = [tokens + [PAD_IDX] * (self.max_len - len(tokens)) for tokens in tgt_tokens]
+            tgt_tokens = [text[:self.max_len - 2] for text in tgt_texts]
+            tgt_padded = [
+                [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens))
+                for tokens in tgt_tokens
+            ]
             tgt_tensors = torch.LongTensor(tgt_padded).transpose(1, 0)
         else:
             src_texts, _ = zip(*batch)
         src_texts = list(src_texts)
-        src_tokens = [text[:self.max_len] for text in src_texts]
-        src_padded = [tokens + [PAD_IDX] * (self.max_len - len(tokens)) for tokens in src_tokens]
+        src_tokens = [text[:self.max_len - 2] for text in src_texts]
+        src_padded = [
+            [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens))
+            for tokens in src_tokens
+        ]
         src_tensors = torch.LongTensor(src_padded).transpose(1, 0)
         if self.test_size != 1:
             return src_tensors, tgt_tensors
