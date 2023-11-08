@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import gdown
 
@@ -10,6 +11,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     destination_path = f"models/{args.checkpoint_name}_checkpoints/{args.checkpoint_name}.pth"
+    os.makedirs(destination_path, exist_ok=True)
 
     if args.checkpoint_name == "transformer":
         gdown.download(transformer_25k, destination_path, quiet=False)
