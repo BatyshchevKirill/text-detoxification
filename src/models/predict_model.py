@@ -37,7 +37,7 @@ if __name__ == '__main__':
         res.append(model(text[0]))
 
     res = '\n'.join(res)
-    with open(args.save_path, 'w') as f:
+    with open(args.save_path, 'w+') as f:
         f.write(res)
 
     print("Results saved to", args.save_path)
