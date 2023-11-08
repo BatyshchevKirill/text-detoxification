@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import tensorflow as tf
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 
 

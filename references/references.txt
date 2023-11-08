@@ -1,7 +1,8 @@
-https://arxiv.org/abs/2109.08914 - Base reference
-https://arxiv.org/pdf/1706.03762.pdf - Attention is all you need
-https://www.youtube.com/watch?v=M6adRGJe5cQ&t=612s - Tutorial transformers, the transformer model was fully copied from it
-https://huggingface.co/s-nlp/roberta_toxicity_classifier?text=You+are+annoying - The toxicity classifier that I used
-https://huggingface.co/s-nlp/t5-paranmt-detox - the pretrained T5 model that I used
-https://huggingface.co/bert-base-uncased - the pretrained bert model that I used
+[1] https://arxiv.org/abs/2109.08914 - Base reference, helped me with the idea for the solutions
+[2] https://arxiv.org/pdf/1706.03762.pdf - "Attention is all you need". Inspiration for the transformer model
+[3] https://www.youtube.com/watch?v=M6adRGJe5cQ&t=612s - Tutorial about transformers, the transformer model was fully taken from it
+[4] https://huggingface.co/s-nlp/roberta_toxicity_classifier?text=You+are+annoying - The toxicity classifier that I used for evaluating the model
+[5] https://huggingface.co/s-nlp/t5-paranmt-detox - The pretrained T5 model that I used
+[6] https://huggingface.co/bert-base-uncased - The pretrained BERT model that I used for baseline solution
+[7] https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2 - The model I used for sentence embedding to compare the semantics of the sentences
 
