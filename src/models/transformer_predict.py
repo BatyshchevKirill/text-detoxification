@@ -5,8 +5,11 @@ from nltk import word_tokenize
 
 nltk.download("punkt")
 
-
 class TransformerPredictor:
+    """
+    This is a class that uses a transformer model of Transformer class to
+    perform a prediction on a sentence
+    """
     def __init__(
             self,
             model_config,
