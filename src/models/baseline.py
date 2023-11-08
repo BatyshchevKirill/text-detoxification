@@ -3,29 +3,54 @@ from transformers import BertForMaskedLM, BertTokenizer
 
 
 class BaselineModel:
-    def __init__(self, toxic_words_path='../data/interim/toxic_words.txt'):
-        self.model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking")
-        self.tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking")
+    """
+    Baseline text detoxification model. Works by masking toxic words
+    and guessing them
+    """
+
+    def __init__(self, toxic_words_path="data/interim/toxic_words.txt"):
+        """
+        Initialize the BaselineModel.
+
+        :param toxic_words_path: Path to a file containing toxic words.
+        """
+        self.model = BertForMaskedLM.from_pretrained(
+            "bert-large-uncased-whole-word-masking"
+        )
+        self.tokenizer = BertTokenizer.from_pretrained(
+            "bert-large-uncased-whole-word-masking"
+        )
         self.toxic_words = set()
-        with open(toxic_words_path, 'r') as f:
+        with open(toxic_words_path, "r") as f:
             for line in f:
                 self.toxic_words.add(line.strip())
-        self.bad_tokens = self.tokenizer.convert_tokens_to_ids(set(self.tokenizer.tokenize(" ".join(self.toxic_words))))
 
-    def __call__(self, text):
+        # Tokens of "bad" words
+        self.bad_tokens = self.tokenizer.convert_tokens_to_ids(
+            set(self.tokenizer.tokenize(" ".join(self.toxic_words)))
+        )
+
+    def __call__(self, text: str) -> str:
+        """
+        Apply text detoxification to the input text.
+
+        :param text: The input text to detoxify.
+
+        :return: The detoxified text.
+        """
         tokens = self.tokenizer.tokenize(text)
         detox_tokens = []
 
         for token in tokens:
             if token in self.toxic_words:
                 masked_text = tokens[:]
-                masked_text[masked_text.index(token)] = '[MASK]'
+                masked_text[masked_text.index(token)] = "[MASK]"
 
                 # Convert the masked tokens back to a string
-                masked_text = ' '.join(masked_text)
+                masked_text = " ".join(masked_text)
 
                 # Masked input should have [CLS] at the beginning and [SEP] at the end
-                masked_text = '[CLS] ' + masked_text + ' [SEP]'
+                masked_text = "[CLS] " + masked_text + " [SEP]"
 
                 # Tokenize the masked text
                 tokenized_text = self.tokenizer.tokenize(masked_text)
@@ -40,7 +65,7 @@ class BaselineModel:
                     pred = out.logits
 
                 # Find the masked token's index
-                mask_idx = tokenized_text.index('[MASK]')
+                mask_idx = tokenized_text.index("[MASK]")
 
                 # Get the predicted probabilities for the [MASK] token
                 pred_prob = pred[0, mask_idx]
@@ -59,5 +84,5 @@ class BaselineModel:
                 detox_tokens.append(predicted_token)
             else:
                 detox_tokens.append(token)
-        result = ' '.join(detox_tokens).replace(' ##', '')
+        result = " ".join(detox_tokens).replace(" ##", "")
         return result

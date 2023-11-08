@@ -2,16 +2,15 @@ import nltk
 import pandas as pd
 import torch
 from nltk.tokenize import word_tokenize
-from torch.utils.data import DataLoader, random_split, RandomSampler
-from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, Dataset, RandomSampler, random_split
 from torchtext.vocab import build_vocab_from_iterator
 from tqdm import tqdm
 
-nltk.download('punkt')
+nltk.download("punkt")
 
 # The constants for the vocab
 UNK_IDX, PAD_IDX, BOS_IDX, EOS_IDX = 0, 1, 2, 3
-special_symbols = ['<unk>', '<pad>', '<bos>', '<eos>']
+special_symbols = ["<unk>", "<pad>", "<bos>", "<eos>"]
 
 
 class ToxicDataset(Dataset):
@@ -19,13 +18,14 @@ class ToxicDataset(Dataset):
     Represents the dataset of toxic text
     """
 
-    def __init__(self,
-                 filepath: str = "../../data/interim/preprocessed_data.csv",
-                 max_vocab_size: int = None,
-                 vocab_path: str = "../../data/interim/vocab.pth",
-                 load_pretrained: bool = False,
-                 train: bool = True
-                 ):
+    def __init__(
+        self,
+        filepath: str = "../../data/interim/preprocessed_data.csv",
+        max_vocab_size: int = None,
+        vocab_path: str = "../../data/interim/vocab.pth",
+        load_pretrained: bool = False,
+        train: bool = True,
+    ):
         """
         :param filepath: the path to the csv file with the dataset
         :param max_vocab_size: the maximum number of words in the vocabulary
@@ -38,9 +38,9 @@ class ToxicDataset(Dataset):
         df = pd.read_csv(filepath)
 
         # Cast to lists
-        self.toxic = df['toxic'].values.tolist()
+        self.toxic = df["toxic"].values.tolist()
         if train:
-            self.detoxed = df['detoxed'].values.tolist()
+            self.detoxed = df["detoxed"].values.tolist()
 
         # Tokenize the words in the sentences
         for i in tqdm(range(len(df))):
@@ -55,9 +55,7 @@ class ToxicDataset(Dataset):
             # Create the vocab
             col = (self.toxic + self.detoxed) if train else self.toxic
             self.vocab = build_vocab_from_iterator(
-                col,
-                specials=special_symbols,
-                max_tokens=max_vocab_size
+                col, specials=special_symbols, max_tokens=max_vocab_size
             )
             self.vocab.set_default_index(0)
 
@@ -72,7 +70,10 @@ class ToxicDataset(Dataset):
         :return: tuple of translated sentences (toxic_sentence, detoxified_sentence) if train,
                  if test - tuple (toxic_sentence, None)
         """
-        return self.vocab(self.toxic[i]), self.vocab(self.detoxed[i]) if self.train else None
+        return (
+            self.vocab(self.toxic[i]),
+            self.vocab(self.detoxed[i]) if self.train else None,
+        )
 
     def __len__(self) -> int:
         """
@@ -89,12 +90,12 @@ class TransformerLoaderCreator:
     """
 
     def __init__(
-            self,
-            dataset: ToxicDataset,
-            batch_size: int,
-            max_len: int,
-            test_size: float = 0.2,
-            random_state: int = None
+        self,
+        dataset: ToxicDataset,
+        batch_size: int,
+        max_len: int,
+        test_size: float = 0.2,
+        random_state: int = None,
     ):
         """
         :param dataset: the dataset instance to create loaders from
@@ -121,11 +122,13 @@ class TransformerLoaderCreator:
             train_dataset, test_dataset = random_split(
                 dataset,
                 [num_train_samples, num_test_samples],
-                generator=torch.Generator().manual_seed(self.random_state)
+                generator=torch.Generator().manual_seed(self.random_state),
             )
 
             # Create a train data loader with manual seed
-            sampler = RandomSampler(train_dataset, generator=torch.Generator().manual_seed(random_state))
+            sampler = RandomSampler(
+                train_dataset, generator=torch.Generator().manual_seed(random_state)
+            )
             self.train_loader = DataLoader(
                 train_dataset,
                 batch_size=self.batch_size,
@@ -157,11 +160,14 @@ class TransformerLoaderCreator:
             tgt_texts = list(tgt_texts)
 
             # Cut too long sentences
-            tgt_tokens = [text[:self.max_len - 2] for text in tgt_texts]
+            tgt_tokens = [text[: self.max_len - 2] for text in tgt_texts]
 
             # Pad too short sentences, add special symbols
             tgt_padded = [
-                [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens) - 2)
+                [BOS_IDX]
+                + tokens
+                + [EOS_IDX]
+                + [PAD_IDX] * (self.max_len - len(tokens) - 2)
                 for tokens in tgt_tokens
             ]
 
@@ -174,11 +180,14 @@ class TransformerLoaderCreator:
         src_texts = list(src_texts)
 
         # Cut too long sentences
-        src_tokens = [text[:self.max_len - 2] for text in src_texts]
+        src_tokens = [text[: self.max_len - 2] for text in src_texts]
 
         # Pad too short sentences, add special symbols
         src_padded = [
-            [BOS_IDX] + tokens + [EOS_IDX] + [PAD_IDX] * (self.max_len - len(tokens) - 2)
+            [BOS_IDX]
+            + tokens
+            + [EOS_IDX]
+            + [PAD_IDX] * (self.max_len - len(tokens) - 2)
             for tokens in src_tokens
         ]
 

@@ -5,11 +5,14 @@ import sys
 sys.path.append(os.getcwd())
 
 from tqdm import tqdm
-from src.models.preprocess import file_path, read, lower, expand_contractions, file_creatable_path
-from src.models.transformer_predict import TransformerPredictor
-from src.models import baseline as b, pretrained_t5 as t5
 
-if __name__ == '__main__':
+from src.models import baseline as b
+from src.models import pretrained_t5 as t5
+from src.models.preprocess import (expand_contractions, file_creatable_path,
+                                   file_path, lower, read)
+from src.models.transformer_predict import TransformerPredictor
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Predict model parser")
     parser.add_argument("model_name", choices=["transformer", "t5", "baseline"])
     parser.add_argument("data_path", type=file_path)
@@ -19,30 +22,28 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--checkpoint", type=file_path, default=None)
     args = parser.parse_args()
 
+    # Preprocess data
     data = read(args.data_path, train=False)
     data = lower(data, train=False)
     data = expand_contractions(data, train=False)
 
     res = []
 
-    if args.model_name == 't5':
+    # Choose the model
+    if args.model_name == "t5":
         model = t5.PretrainedT5()
-    elif args.model_name == 'transformer':
-        model = TransformerPredictor(
-            (512, 25000, 8, 3, 3, 4, 0.1, 128)
-        )
+    elif args.model_name == "transformer":
+        model = TransformerPredictor((512, 25000, 8, 3, 3, 4, 0.1, 128))
     else:
         model = b.BaselineModel(args.toxic_words_path)
 
+    # Process the texts
     for text in tqdm(data.values):
         res.append(model(text[0]))
 
-    res = '\n'.join(res)
-    with open(args.save_path, 'w+') as f:
+    # Save the results
+    res = "\n".join(res)
+    with open(args.save_path, "w+") as f:
         f.write(res)
 
     print("Results saved to", args.save_path)
-
-
-
-
