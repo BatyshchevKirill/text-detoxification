@@ -5,6 +5,7 @@ sys.path.append(os.getcwd())
 
 from tqdm import tqdm
 from src.models.preprocess import file_path, read, lower, expand_contractions, file_creatable_path
+from src.models.transformer_predict import TransformerPredictor
 from src.models import baseline as b, pretrained_t5 as t5
 
 if __name__ == '__main__':
@@ -22,15 +23,18 @@ if __name__ == '__main__':
     data = expand_contractions(data, train=False)
 
     res = []
-    if args.model_name == 'transformer':
-        pass
+
+    if args.model_name == 't5':
+        model = t5.PretrainedT5()
+    elif args.model_name == 'transformer':
+        model = TransformerPredictor(
+            (512, 25000, 8, 3, 3, 4, 0.1, 128)
+        )
     else:
-        if args.model_name == 't5':
-            model = t5.PretrainedT5()
-        else:
-            model = b.BaselineModel(args.toxic_words_path)
-        for text in tqdm(data.values):
-            res.append(model(text[0]))
+        model = b.BaselineModel(args.toxic_words_path)
+
+    for text in tqdm(data.values):
+        res.append(model(text[0]))
 
     res = '\n'.join(res)
     with open(args.save_path, 'w') as f:
