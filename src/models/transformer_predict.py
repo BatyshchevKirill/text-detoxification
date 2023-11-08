@@ -7,6 +7,10 @@ nltk.download("punkt")
 
 
 class TransformerPredictor:
+    """
+    This is a class that uses a transformer model of Transformer class to
+    perform a prediction on a sentence
+    """
     def __init__(
             self,
             model_config,
@@ -14,6 +18,12 @@ class TransformerPredictor:
             vocab_path: str = "data/interim/vocab.pth",
             max_len: int = 128
     ):
+        """
+        :param model_config: tuple containing model parameters
+        :param model_path: path to model checkpoint
+        :param vocab_path: path to vocab
+        :param max_len: the maximal length of the sentence
+        """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = Transformer(*model_config, self.device)
         self.model.eval()
