@@ -4,7 +4,6 @@ import sys
 
 sys.path.append(os.getcwd())
 
-import torch
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from src.models.preprocess import file_path
@@ -32,11 +31,10 @@ def rouge(input_data):
 
 class ToxicityClassifier:
     def __init__(self):
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = RobertaForSequenceClassification.from_pretrained(
-            'SkolkovoInstitute/roberta_toxicity_classifier').to(device)
+            'SkolkovoInstitute/roberta_toxicity_classifier')
 
-        self.tokenizer = RobertaTokenizer.from_pretrained('SkolkovoInstitute/roberta_toxicity_classifier').to(device)
+        self.tokenizer = RobertaTokenizer.from_pretrained('SkolkovoInstitute/roberta_toxicity_classifier')
         self.sm = Softmax(dim=0)
 
     def __call__(self, text):
@@ -51,8 +49,7 @@ class SemanticSimilarityClassifier:
     https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
     """
     def __init__(self):
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2').to(device)
+        self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
     def __call__(self, sentences):
         assert len(sentences) == 2, "There should be only 2 sentences for the metric"

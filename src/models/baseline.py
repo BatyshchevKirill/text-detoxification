@@ -4,9 +4,8 @@ from transformers import BertForMaskedLM, BertTokenizer
 
 class BaselineModel:
     def __init__(self, toxic_words_path='../data/interim/toxic_words.txt'):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking").to(self.device)
-        self.tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking").to(self.device)
+        self.model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking")
+        self.tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking")
         self.toxic_words = set()
         with open(toxic_words_path, 'r') as f:
             for line in f:
@@ -33,7 +32,7 @@ class BaselineModel:
 
                 # Convert the tokenized text to input features
                 input_ids = self.tokenizer.convert_tokens_to_ids(tokenized_text)
-                input_ids = torch.tensor(input_ids).unsqueeze(0).to(self.device)
+                input_ids = torch.tensor(input_ids).unsqueeze(0)
 
                 # Get predictions for the masked tokens
                 with torch.no_grad():
