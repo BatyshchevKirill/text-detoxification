@@ -12,9 +12,9 @@ if __name__ == '__main__':
     parser.add_argument("model_name", choices=["transformer", "t5", "baseline"])
     parser.add_argument("data_path", type=file_path)
     parser.add_argument("save_path", type=file_creatable_path)
-    parser.add_argument("--vocab-path", default=None, type=file_path)
-    parser.add_argument("--toxic_words_path", default=None, type=file_path)
-    parser.add_argument("--checkpoint", type=file_path, default=None)
+    parser.add_argument("-v", "--vocab-path", default=None, type=file_path)
+    parser.add_argument("-t", "--toxic_words_path", default=None, type=file_path)
+    parser.add_argument("-c", "--checkpoint", type=file_path, default=None)
     args = parser.parse_args()
 
     data = read(args.data_path, train=False)

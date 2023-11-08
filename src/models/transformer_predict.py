@@ -6,7 +6,7 @@ from nltk import word_tokenize
 nltk.download("punkt")
 
 
-class  TransformerPredictor:
+class TransformerPredictor:
     def __init__(
             self,
             model_config,
