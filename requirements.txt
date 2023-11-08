@@ -13,3 +13,4 @@ tensorboard~=2.14.1
 numpy~=1.23.5
 gdown~=4.7.1
 tensorflow~=2.14.0
+sentence-transformers~=2.2.2

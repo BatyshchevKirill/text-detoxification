@@ -5,6 +5,8 @@ import sys
 sys.path.append(os.getcwd())
 
 import torch
+import numpy as np
+from sentence_transformers import SentenceTransformer
 from src.models.preprocess import file_path
 from torchmetrics.text import BLEUScore
 from torchmetrics.text.rouge import ROUGEScore
@@ -44,15 +46,29 @@ class ToxicityClassifier:
         return res[1]
 
 
+class SemanticSimilarityClassifier:
+    """
+    https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+    """
+    def __init__(self):
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2').to(device)
+
+    def __call__(self, sentences):
+        assert len(sentences) == 2, "There should be only 2 sentences for the metric"
+        embeddings = self.model.encode(sentences)
+        return np.dot(*embeddings)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate model parser")
     parser.add_argument("predictions_path", type=file_path)
-    parser.add_argument("metric_name", choices=["bleu", "rouge", "toxicity"])
+    parser.add_argument("metric_name", choices=["bleu", "rouge", "toxicity", "similarity"])
     parser.add_argument("-r", "--reference-path", default=None, type=file_path)
     args = parser.parse_args()
     m_name = args.metric_name
 
-    if m_name == "bleu" or m_name == "rouge":
+    if m_name == "bleu" or m_name == "rouge" or m_name == "similarity":
         if args.reference_path is None:
             parser.error(
                 f"Reference path is required for {m_name} score. Use -r and fill the path of the reference file"
@@ -66,7 +82,12 @@ if __name__ == "__main__":
             reference), "The lengths of the reference and prediction files should be the same"
         data = list(zip(predictions, reference))
 
-        metric = bleu if m_name == "bleu" else rouge
+        if m_name == 'bleu':
+            metric = bleu
+        elif m_name == 'rouge':
+            metric = rouge
+        elif m_name == 'similarity':
+            metric = SemanticSimilarityClassifier()
     else:
         with open(args.predictions_path, 'r') as f:
             data = f.read().split("\n")
